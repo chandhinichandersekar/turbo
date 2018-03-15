@@ -20,11 +20,25 @@ import "phoenix_html"
 
 // import socket from "./socket"
 
-// import todo_init from "./turbo";
-//
-// function start() {
-//   let root = document.getElementById('root');
-//   todo_init(root);
-// }
-//
-// $(start);
+import socket from "./socket"
+
+import game_init from "./play";
+
+function start() {
+  let root = document.getElementById('root');
+  let channel = socket.channel("games:" + window.gameName, {});
+  game_init(root,channel);
+}
+
+
+$('#game-button').bind('click',function(e){
+      e.preventDefault();
+      let input = $("#game-input").val();
+      document.location.href="/game/"+ input;
+});
+
+
+// Use jQuery to delay until page loaded.
+$(start);
+
+  

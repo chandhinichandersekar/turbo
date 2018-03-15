@@ -9,6 +9,10 @@
 
     <title>Hello Turbo!</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <script>
+     window.userToken = "INSECURE";
+   </script>
+   <script src = "https://cdn.rawgit.com/konvajs/konva/1.2.2/konva.min.js"> </script>
   </head>
 
   <body>

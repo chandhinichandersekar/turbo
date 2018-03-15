@@ -3,6 +3,8 @@ defmodule TurboWeb.UserSocket do
 
   ## Channels
   # channel "room:*", TurboWeb.RoomChannel
+  channel "games:*", TurboWeb.GamesChannel
+
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
