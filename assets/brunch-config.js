@@ -46,9 +46,17 @@ exports.config = {
   plugins: {
     babel: {
       // Do not use ES6 compiler in vendor code
-      ignore: [/vendor/]
+      ignore: [/vendor/],
+      presets: ['env', 'react'],
+    },
+    sass: {
+      options: {
+        includePaths: ["node_modules/bootstrap/scss"],
+        precision: 8,
+      }
     }
   },
+
 
   modules: {
     autoRequire: {
@@ -57,6 +65,10 @@ exports.config = {
   },
 
   npm: {
-    enabled: true
-  }
+     enabled: true,
+     globals: {
+       _: 'underscore',
+       $: 'jquery'
+     }
+   }
 };
