@@ -40,5 +40,3 @@ $('#game-button').bind('click',function(e){
 
 // Use jQuery to delay until page loaded.
 $(start);
-
-  

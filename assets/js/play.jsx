@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Button } from 'reactstrap';
 import { Stage, Layer, Image } from "react-konva";
 
+
 export default function game_init(root, channel) {
   ReactDOM.render(<TurboGame channel = {channel} />, root);
 }
@@ -11,9 +12,6 @@ class TurboGame extends React.Component {
   constructor(props) {
     super(props);
     this.channel = props.channel;
-    this.state = {
-    image: null
-  };
 
     //this.state = { skel: [] , count: 0 };
     this.channel.join()
@@ -22,11 +20,14 @@ class TurboGame extends React.Component {
 
   }
 
+
+
   gotView(view) {
     console.log("New view", view);
     this.setState(view.game);
     // console.log("new game", view.game);
   }
+
 
   render() {
     return (
@@ -64,7 +65,7 @@ class TurboGame extends React.Component {
 
   render() {
     return <Image image={this.state.image} width={1400}
-        height={600} />;
+        height={800} />;
   }
 }
 
@@ -75,18 +76,81 @@ class CarImage extends React.Component {
     super(props);
     this.channel = props.channel;
     this.state = {
-    image: new window.Image()
+    image: new window.Image(),
+    x: 0,
+    y: 700
+
   };
 }
+
+
+  _handleKeyDown (event){
+    event.preventDefault();
+    console.log(this.refs.car);
+    const car = this.refs.car;
+    console.log(car);
+    console.log(car.attrs.y);
+    console.log(car.attrs.x);
+
+
+    var ctx = this.refs.car.getContext('2d');
+
+      switch( event.keyCode ) {
+      // left arrow pressed
+      case 37:
+      car.to({
+        x:car.attrs.x-50,
+        y:car.attrs.y,
+        duration: 0.2,
+      });
+        console.log("left key pressed");
+        break;
+        // up arrow pressed
+      case 38:
+      car.to({
+        x:car.attrs.x,
+        y:car.attrs.y-100,
+        duration: 0.2,
+      });
+        console.log("up key pressed");
+        break;
+        // right arrow pressed
+      case 39:
+      car.to({
+        x:car.attrs.x+50,
+        y:car.attrs.y,
+        duration: 0.2,
+      });
+        console.log("right key pressed");
+        break;
+        // down arrow pressed
+      case 40:
+      car.to({
+        x:car.attrs.x,
+        y:car.attrs.y+100,
+        duration: 0.2,
+      });
+        console.log("down key pressed");
+        break;
+          default:
+              break;
+      }
+  }
+
+
   componentDidMount() {
     this.state.image.src = "https://cdn-images.speedvegas.com/images/exotic-cars/lamborghini-aventador.png";
     this.state.image.onload = () => {
       // calling set state here will do nothing
       // because properties of Konva.Image are not changed
       // so we need to update layer manually
-      this.imageNode.getLayer().batchDraw();
+    //  this.imageNode.getLayer().batchDraw();
     };
+      document.addEventListener("keydown", this._handleKeyDown.bind(this));
   }
+
+
+
 
   render() {
     return (
@@ -94,10 +158,11 @@ class CarImage extends React.Component {
         image={this.state.image}
         width={100}
         height={50}
-        y={500}
-        ref={node => {
-          this.imageNode = node;
-        }}
+        y={this.state.y}
+        x={this.state.x}
+        draggable="true"
+        ref="car"
+
       />
     );
   }
