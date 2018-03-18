@@ -14,17 +14,20 @@ class TurboGame extends React.Component {
     super(props);
     this.channel = props.channel;
     this.state = {
+      playerInfo:[[],[]],
+      obstaclePosition:[],
       playerOneInfo: [],
       playerTwoInfo: [],
       playerCount: 0,
-
+      finishPosition: [[1280,620]],
+      obstacleimage:new window.Image(),
+      image:new window.Image(),
+      finishimage:new window.Image()
     };
     this.channel.join()
         .receive("ok", this.gotView.bind(this))
         .receive("error", resp => { console.log("Unable to join", resp) });
-
   }
-
 
   gotView(view) {
     console.log("New view", view);
@@ -37,15 +40,145 @@ class TurboGame extends React.Component {
     console.log(this.state);
   }
 
+  sendo(playerInfo) {
+    this.channel.push("playerInfo", {playerInfo : playerInfo})
+      .receive("ok", this.gotView.bind(this));
+    }
+
+  componentDidMount() {
+    this.state.image.src = "/images/car.png";
+    this.state.obstacleimage.src = "/images/road-blocker.png";
+    this.state.finishimage.src = "/images/finishline.png";
+    document.addEventListener("keydown", this._handleKeyDown.bind(this));
+  }
+    _handleKeyDown (event){
+      event.preventDefault();
+      const car0 = this.refs.car0;
+      console.log("car0",car0);
+      const car1 = this.refs.car1;
+      console.log("car1",car1);
+      // console.log("value of x inside switch",this.state.playerInfo[0]);
+      switch( event.keyCode ) {
+        case 65:
+        car0.to({
+          x:car0.attrs.x-50,
+          y:car0.attrs.y,
+          duration: 0.2,
+        });
+          break;
+        case 87:
+        car0.to({
+          x:car0.attrs.x,
+          y:car0.attrs.y-100,
+          duration: 0.2,
+        });
+          console.log("up key pressed");
+          break;
+          // right arrow pressed
+        case 68:
+        car0.to({
+          x:car0.attrs.x+50,
+          y:car0.attrs.y,
+          duration: 0.2,
+        });
+          console.log("right key pressed");
+          break;
+          // down arrow pressed
+        case 83:
+        car0.to({
+          x:car0.attrs.x,
+          y:car0.attrs.y+100,
+          duration: 0.2,
+        });
+        break;
+        case 37:
+          car1.to({
+            x:car1.attrs.x-50,
+            y:car1.attrs.y,
+            duration: 0.2,
+          });
+            console.log("left key pressed");
+            break;
+          case 38:
+          car1.to({
+            x:car1.attrs.x,
+            y:car1.attrs.y-100,
+            duration: 0.2,
+          });
+            console.log("up key pressed");
+            break;
+            // right arrow pressed
+          case 39:
+          car1.to({
+            x:car1.attrs.x+50,
+            y:car1.attrs.y,
+            duration: 0.2,
+          });
+            console.log("right key pressed");
+            break;
+            // down arrow pressed
+          case 40:
+          car1.to({
+            x:car1.attrs.x,
+            y:car1.attrs.y+100,
+            duration: 0.2,
+          });
+            console.log("down key pressed");
+            break;
+              default:
+                  break;
+          }
+        this.setState({playerInfo:[[car0.attrs.x,car0.attrs.y],[car1.attrs.x,car1.attrs.y]]});
+        console.log("state", this.state.playerInfo);
+        this.sendo(this.state.playerInfo);
+    }
 
   render() {
-    console.log("in turbo render", this.state.playerOneInfo);
+
+    let carlist = this.state.playerInfo.map((car,i)=>
+        <Image
+        key={i}
+        image={this.state.image}
+        width={130}
+        height={50}
+        x={car[0]}
+        y={car[1]}
+        ref={"car"+i}
+      />
+  );
+  let obstaclelist = this.state.obstaclePosition.map((obstacle,i)=>
+      <Image
+      key={i}
+      image={this.state.obstacleimage}
+      width={80}
+      height={100}
+      x={obstacle[0]}
+      y={obstacle[1]}
+      ref={i}
+    />
+);
+let finishline = this.state.finishPosition.map((finish,i)=>
+    <Image
+    key={i}
+    image={this.state.finishimage}
+    width={80}
+    height={180}
+    x={finish[0]}
+    y={finish[1]}
+    ref={i}
+  />
+);
+
+    console.log("in turbo render", this.state.playerInfo);
+
+
     return (
       <Stage width={window.innerWidth} height={window.innerHeight}>
         <Layer>
           <BgImage  />
-          <CarOneImage playerOneInfo={this.state.playerOneInfo} />
-          <CarTwoImage playerTwoInfo={this.state.playerTwoInfo} />
+          {finishline}
+          {obstaclelist}
+          {carlist}
         </Layer>
       </Stage>
     );
@@ -75,201 +208,5 @@ class TurboGame extends React.Component {
   render() {
     return <Image image={this.state.image} width={1400}
         height={800} />;
-  }
-}
-
-
-class CarOneImage extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.channel = props.channel;
-    this.state = {
-    image: new window.Image(),
-    x: this.props.playerOneInfo[0],
-    y: this.props.playerOneInfo[1]
-  };
-
-
-}
-
-
-  _handleKeyDown (event){
-    event.preventDefault();
-    const car = this.refs.car;
-    console.log("car",car);
-  console.log("value of x inside switch",this.props.playerOneInfo[0]);
-      switch( event.keyCode ) {
-
-      // left arrow pressed
-      case 37:
-      car.to({
-        x:car.attrs.x-50,
-        y:car.attrs.y,
-        duration: 0.2,
-      });
-        console.log("left key pressed");
-        break;
-        // up arrow pressed
-      case 38:
-      car.to({
-        x:car.attrs.x,
-        y:car.attrs.y-100,
-        duration: 0.2,
-      });
-        console.log("up key pressed");
-        break;
-        // right arrow pressed
-      case 39:
-      car.to({
-        x:car.attrs.x+50,
-        y:car.attrs.y,
-        duration: 0.2,
-      });
-        console.log("right key pressed");
-        break;
-        // down arrow pressed
-      case 40:
-      car.to({
-        x:car.attrs.x,
-        y:car.attrs.y+100,
-        duration: 0.2,
-      });
-        console.log("down key pressed");
-        break;
-          default:
-              break;
-      }
-
-      this.setState({
-        x: car.attrs.x,
-        y: car.attrs.y,
-        duration: 0.2
-      });
-    
-  }
-
-
-  componentDidMount() {
-    this.state.image.src = "/images/car.png";
-    this.state.image.onload = () => {
-      // calling set state here will do nothing
-      // because properties of Konva.Image are not changed
-      // so we need to update layer manually
-    //  this.imageNode.getLayer().batchDraw();
-    };
-      document.addEventListener("keydown", this._handleKeyDown.bind(this));
-  }
-
-
-  render() {
-    console.log("x value in render", this.state.x);
-    return (
-      <Image
-        image={this.state.image}
-        width={130}
-        height={50}
-        x={this.props.playerOneInfo[0]}
-        y={this.props.playerOneInfo[1]}
-        draggable="true"
-        ref="car"
-
-      />
-    );
-  }
-}
-
-
-class CarTwoImage extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.channel = props.channel;
-    this.state = {
-    image: new window.Image(),
-    x: this.props.playerTwoInfo[0],
-    y: this.props.playerTwoInfo[1]
-  };
-}
-
-
-  _handleKeyDown (event){
-    event.preventDefault();
-    const car2 = this.refs.car2;
-
-      switch( event.keyCode ) {
-      // left arrow pressed
-      case 65:
-      car2.to({
-        x:car2.attrs.x-50,
-        y:car2.attrs.y,
-        duration: 0.2,
-      });
-        console.log("left key pressed");
-        break;
-        // up arrow pressed
-      case 87:
-      car2.to({
-        x:car2.attrs.x,
-        y:car2.attrs.y-100,
-        duration: 0.2,
-      });
-        console.log("up key pressed");
-        break;
-        // right arrow pressed
-      case 68:
-      car2.to({
-        x:car2.attrs.x+50,
-        y:car2.attrs.y,
-        duration: 0.2,
-      });
-        console.log("right key pressed");
-        break;
-        // down arrow pressed
-      case 83:
-      car2.to({
-        x:car2.attrs.x,
-        y:car2.attrs.y+100,
-        duration: 0.2,
-      });
-        console.log("down key pressed");
-        break;
-          default:
-              break;
-      }
-
-      this.setState({
-        x: car2.attrs.x,
-        y: car2.attrs.y,
-        duration: 0.2
-      });
-
-  }
-
-
-  componentDidMount() {
-    this.state.image.src = "/images/car2.png";
-    this.state.image.onload = () => {
-      // calling set state here will do nothing
-      // because properties of Konva.Image are not changed
-      // so we need to update layer manually
-    //  this.imageNode.getLayer().batchDraw();
-    };
-      document.addEventListener("keydown", this._handleKeyDown.bind(this));
-  }
-
-
-  render() {
-    return (
-      <Image
-        image={this.state.image}
-        width={125}
-        height={40}
-        x={this.props.playerTwoInfo[0]}
-        y={this.props.playerTwoInfo[1]}
-        draggable="true"
-        ref="car2"
-      />
-    );
   }
 }
