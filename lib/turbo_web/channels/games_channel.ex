@@ -1,9 +1,15 @@
 defmodule TurboWeb.GamesChannel do
   use TurboWeb, :channel
 
-  def join("games:", payload, socket) do
+  alias Turbo.Game
+
+  def join("games:" <> name, payload, socket) do
     if authorized?(payload) do
-      {:ok, socket}
+      game = Turbo.GameBackup.load(name) || Game.new()
+      socket = socket
+      |> assign(:game, game)
+      |> assign(:name, name)
+      {:ok, %{"join" => name, "game" => Game.client_view(game)}, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
@@ -11,8 +17,11 @@ defmodule TurboWeb.GamesChannel do
 
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
-  def handle_in("ping", payload, socket) do
-    {:reply, {:ok, payload}, socket}
+  def handle_in("playerCount", %{"playerCount" => ll}, socket) do
+    game = Game.play(socket.assigns[:game], ll)
+    Turbo.GameBackup.save(socket.assigns[:name], game)
+    socket = assign(socket, :game, game)
+    {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
   end
 
   # It is also common to receive messages from the client and
