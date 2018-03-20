@@ -23,41 +23,46 @@ defmodule Turbo.Game do
   def play(game,ll,id) do
     game = Map.replace!(game, :playerCount ,ll)
     playerInfo_map = game[:playerInfo]
-      if(id == 1) do
-        playerInfo_map = Map.put(playerInfo_map,id,[10,720])
-        game = Map.put(game,:playerInfo,playerInfo_map)
+    game = if(id == 1) do
+        playerInfo_map = Map.put(playerInfo_map,id,[10,730])
+        Map.put(game,:playerInfo,playerInfo_map)
       else
         if (id == 2) do
-        playerInfo_map = Map.put(playerInfo_map,id,[10,620])
-        game = Map.put(game,:playerInfo,playerInfo_map)
+        playerInfo_map = Map.put(playerInfo_map,id,[10,630])
+        Map.put(game,:playerInfo,playerInfo_map)
       else
-        IO.inspect("Observer")
+        game
       end
       end
-      IO.inspect(game)
       game
     end
 
 
+    def setActions(game,keyCode,id) do
+      playerInfo_map = game[:playerInfo]
+      game = case{keyCode} do
+        {37} -> [x,y] = playerInfo_map[id]
+                x = x - 30
+                playerInfo_map = Map.put(playerInfo_map,id,[x,y])
+                Map.put(game,:playerInfo,playerInfo_map)
+        {38} -> [x,y] = playerInfo_map[id]
+                y = y - 30
+                playerInfo_map = Map.put(playerInfo_map,id,[x,y])
+                Map.put(game,:playerInfo,playerInfo_map)
+        {39} ->  [x,y] = playerInfo_map[id]
+                x = x + 30
+                playerInfo_map = Map.put(playerInfo_map,id,[x,y])
+                Map.put(game,:playerInfo,playerInfo_map)
+        {40} -> [x,y] = playerInfo_map[id]
+                y = y + 30
+                playerInfo_map = Map.put(playerInfo_map,id,[x,y])
+                Map.put(game,:playerInfo,playerInfo_map)
+        _ -> game
+      end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    def playerInfo(game,ll) do
       # IO.inspect("before updating playerInfo")
-      IO.inspect(game)
-      game = Map.replace!(game, :playerInfo ,ll)
+      # IO.inspect(game)
+      #game = Map.replace!(game, :playerInfo ,ll)
       # rangevalues = Enum.map(game.obstaclePosition,fn x -> Enum.at(x,0) end)
       # |> Enum.map(fn x -> Enum.to_list x-80 .. x+20 end)
       # |> List.flatten()
@@ -85,8 +90,8 @@ defmodule Turbo.Game do
 
 
     def getObstacles() do
-      obs = [[[250,720],[500,620],[750,720],[1100,620]],[[250,620],[500,720],[850,620],
-      [950,720]],[[250,720],[500,620],[750,720],[1100,620]],[[250,620],[500,720],[850,620],[950,720]]]
+      obs = [[[250,710],[500,620],[750,710],[1100,620]],[[250,620],[500,710],[850,620],
+      [950,710]],[[250,710],[500,620],[750,710],[1100,620]],[[250,620],[500,710],[850,620],[950,710]]]
       |> Enum.random()
       IO.inspect obs
       obs
