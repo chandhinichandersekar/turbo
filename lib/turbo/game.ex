@@ -60,40 +60,39 @@ defmodule Turbo.Game do
         _ -> game
       end
 
-      # IO.inspect("before updating playerInfo")
-      # IO.inspect(game)
-      #game = Map.replace!(game, :playerInfo ,ll)
-      # rangevalues = Enum.map(game.obstaclePosition,fn x -> Enum.at(x,0) end)
-      # |> Enum.map(fn x -> Enum.to_list x-80 .. x+20 end)
-      # |> List.flatten()
-      # IO.inspect("range")
-      # IO.inspect(rangevalues)
-      # # obstacleYOffset = Enum.fetch!(,1)
-      # IO.inspect(Enum.at(Enum.at(game.playerInfo,0),0))
-      # if(Enum.member?(rangevalues, Enum.at(Enum.at(game.playerInfo,0),0))) do
-      #   IO.inspect "hit"
-      # #   # oldposx = Enum.at(Enum.at(game.playerInfo,0),0)
-      # #   # IO.inspect "oldposx"
-      # #   # IO.inspect oldposx
-      # #   # oldposy = Enum.at(Enum.at(game.playerInfo,0),1)
-      # #   # # newposx = Enum.at(Enum.at(game.playerInfo,0),0)
-      # #   # # IO.inspect "newposx"
-      # #   # # IO.inspect newposx
-      # #   # #
-      # #   # game = Map.replace!(game, :playerInfo ,[[oldposx-100,oldposy],Enum.at(game.playerInfo,1)])
-      # #   # # # IO.inspect("after updating playerInfo")
-      # #   IO.inspect(game)
-      # end
+      [x,y] = playerInfo_map[id]
+      obstaclelist = Enum.map(game.obstaclePosition,&getObstacleRange/1)
+      hitObstacle = Enum.map(obstaclelist,
+      fn hit ->
+        if(Enum.member?(Enum.at(Enum.at(hit,0),0), x) && Enum.member?(Enum.at(Enum.at(hit,1),0), y )) do
+           IO.inspect hit
+          true
+        else
+          false
+        end
+      end)
+      if Enum.any?(hitObstacle) do
+         x = x - 100
+         playerInfo_map = Map.put(playerInfo_map,id,[x,y])
+         game = Map.put(game,:playerInfo,playerInfo_map)
+         hitObstacle = []
+       else
+       end
       game
     end
 
+    def getObstacleRange(obs) do
+      [x,y] = obs
+      xrangevalues = Enum.to_list x-50 .. x+20
+      yrangevalues =  Enum.to_list y-10 .. y+40
+      rangeValues = [[xrangevalues],[yrangevalues]]
+    end
 
 
     def getObstacles() do
       obs = [[[250,710],[500,620],[750,710],[1100,620]],[[250,620],[500,710],[850,620],
       [950,710]],[[250,710],[500,620],[750,710],[1100,620]],[[250,620],[500,710],[850,620],[950,710]]]
       |> Enum.random()
-      IO.inspect obs
       obs
     end
 end
