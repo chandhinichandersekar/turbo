@@ -5,10 +5,8 @@ defmodule Turbo.Game do
 
   def getDefaultState() do
     %{
-      playerInfo: [[],[]],
+      playerInfo: %{},
       obstaclePosition: getObstacles(),
-      playerOneInfo: [],
-      playerTwoInfo: [],
       winner: 0,
       playerCount: 0
     }
@@ -18,21 +16,20 @@ defmodule Turbo.Game do
     %{
       obstaclePosition: game.obstaclePosition,
       playerInfo: game.playerInfo,
-      playerOneInfo: game.playerOneInfo,
-      playerTwoInfo: game.playerTwoInfo,
       playerCount: game.playerCount
     }
   end
 
-  def play(game,ll) do
+  def play(game,ll,id) do
     game = Map.replace!(game, :playerCount ,ll)
-      if(game.playerCount == 1) do
-        game = Map.replace!(game, :playerInfo ,[[10,720]])
-
+    playerInfo_map = game[:playerInfo]
+      if(id == 1) do
+        playerInfo_map = Map.put(playerInfo_map,id,[10,720])
+        game = Map.put(game,:playerInfo,playerInfo_map)
       else
-        if (game.playerCount == 2) do
-        game = Map.replace!(game, :playerInfo ,[[10,720],[10,620]])
-
+        if (id == 2) do
+        playerInfo_map = Map.put(playerInfo_map,id,[10,620])
+        game = Map.put(game,:playerInfo,playerInfo_map)
       else
         IO.inspect("Observer")
       end
@@ -41,18 +38,55 @@ defmodule Turbo.Game do
       game
     end
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     def playerInfo(game,ll) do
-      IO.inspect("before updating playerInfo")
+      # IO.inspect("before updating playerInfo")
       IO.inspect(game)
       game = Map.replace!(game, :playerInfo ,ll)
-      IO.inspect("after updating playerInfo")
-      IO.inspect(game)
+      # rangevalues = Enum.map(game.obstaclePosition,fn x -> Enum.at(x,0) end)
+      # |> Enum.map(fn x -> Enum.to_list x-80 .. x+20 end)
+      # |> List.flatten()
+      # IO.inspect("range")
+      # IO.inspect(rangevalues)
+      # # obstacleYOffset = Enum.fetch!(,1)
+      # IO.inspect(Enum.at(Enum.at(game.playerInfo,0),0))
+      # if(Enum.member?(rangevalues, Enum.at(Enum.at(game.playerInfo,0),0))) do
+      #   IO.inspect "hit"
+      # #   # oldposx = Enum.at(Enum.at(game.playerInfo,0),0)
+      # #   # IO.inspect "oldposx"
+      # #   # IO.inspect oldposx
+      # #   # oldposy = Enum.at(Enum.at(game.playerInfo,0),1)
+      # #   # # newposx = Enum.at(Enum.at(game.playerInfo,0),0)
+      # #   # # IO.inspect "newposx"
+      # #   # # IO.inspect newposx
+      # #   # #
+      # #   # game = Map.replace!(game, :playerInfo ,[[oldposx-100,oldposy],Enum.at(game.playerInfo,1)])
+      # #   # # # IO.inspect("after updating playerInfo")
+      # #   IO.inspect(game)
+      # end
       game
     end
 
+
+
     def getObstacles() do
-      obs = [[[250,700],[500,600],[750,700],[1100,600]],[[250,600],[500,700],[850,600],
-      [950,700]],[[250,700],[500,600],[750,700],[1100,600]],[[250,600],[500,700],[850,600],[950,700]]]
+      obs = [[[250,720],[500,620],[750,720],[1100,620]],[[250,620],[500,720],[850,620],
+      [950,720]],[[250,720],[500,620],[750,720],[1100,620]],[[250,620],[500,720],[850,620],[950,720]]]
       |> Enum.random()
       IO.inspect obs
       obs

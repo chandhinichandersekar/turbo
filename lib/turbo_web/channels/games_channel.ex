@@ -17,8 +17,8 @@ defmodule TurboWeb.GamesChannel do
 
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
-  def handle_in("playerCount", %{"playerCount" => ll}, socket) do
-    game = Game.play(socket.assigns[:game], ll)
+  def handle_in("playerCount", %{"playerCount" => ll, "id" => id}, socket) do
+    game = Game.play(socket.assigns[:game], ll,id)
     Turbo.GameBackup.save(socket.assigns[:name], game)
     socket = assign(socket, :game, game)
     {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}

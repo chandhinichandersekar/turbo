@@ -34,7 +34,8 @@ function start() {
 $('#game-button').bind('click',function(e){
       e.preventDefault();
       let input = $("#game-input").val();
-      document.location.href="/game/"+ input;
+      // let player = $("#player-name").val();
+      document.location.href="/game/"+ input
 });
 
 
