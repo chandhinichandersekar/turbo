@@ -17,9 +17,10 @@ class TurboGame extends React.Component {
     this.count = 0;
     this.state = {
       playerInfo:{},
+      winner: 0,
       obstaclePosition:[],
       playerCount: 0,
-      finishPosition: [[1280,620]],
+      finishPosition: [],
       obstacleimage:new window.Image(),
       image:new window.Image(),
       finishimage:new window.Image()
@@ -40,8 +41,11 @@ class TurboGame extends React.Component {
     }
     this.channel.on("playerActionsCompleted", msg => {
       this.setState({playerInfo: msg.playerInfo})
+      console.log(msg)
+      this.setState({winner: msg.winner})
       console.log("Some call")
     });
+    console.log(this.state.winner)
   }
 
   sendInfo(keyCode,id) {
@@ -99,15 +103,17 @@ let finishline = this.state.finishPosition.map((finish,i)=>
 );
 
     return (
+      <div>
       <Stage width={window.innerWidth} height={window.innerHeight}>
         <Layer>
           <BgImage  />
           {finishline}
           {obstaclelist}
           {carlist}
-
         </Layer>
       </Stage>
+      <h1>Winner is : { this.state.winner ? "Player" + " " +this.state.winner : "Still Playing"} </h1>
+      </div>
     );
   }
 }

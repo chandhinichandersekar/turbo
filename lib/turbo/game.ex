@@ -8,14 +8,17 @@ defmodule Turbo.Game do
       playerInfo: %{},
       obstaclePosition: getObstacles(),
       winner: 0,
-      playerCount: 0
+      playerCount: 0,
+      finishPosition: [[1280,620]]
     }
   end
 
   def client_view(game) do
     %{
       obstaclePosition: game.obstaclePosition,
+      finishPosition: game.finishPosition,
       playerInfo: game.playerInfo,
+      winner: game.winner,
       playerCount: game.playerCount
     }
   end
@@ -52,6 +55,8 @@ defmodule Turbo.Game do
         {39} ->  [x,y] = playerInfo_map[id]
                 x = x + 30
                 playerInfo_map = Map.put(playerInfo_map,id,[x,y])
+                game = checkFinish(game,x,y,id)
+                IO.inspect game
                 Map.put(game,:playerInfo,playerInfo_map)
         {40} -> [x,y] = playerInfo_map[id]
                 y = y + 30
@@ -65,7 +70,7 @@ defmodule Turbo.Game do
       hitObstacle = Enum.map(obstaclelist,
       fn hit ->
         if(Enum.member?(Enum.at(Enum.at(hit,0),0), x) && Enum.member?(Enum.at(Enum.at(hit,1),0), y )) do
-           IO.inspect hit
+           # IO.inspect hit
           true
         else
           false
@@ -94,5 +99,15 @@ defmodule Turbo.Game do
       [950,710]],[[250,710],[500,620],[750,710],[1100,620]],[[250,620],[500,710],[850,620],[950,710]]]
       |> Enum.random()
       obs
+    end
+
+    def checkFinish(game,x,y,id) do
+      finishRange = getObstacleRange(Enum.at(game.finishPosition,0))
+      if (Enum.member?(Enum.at(Enum.at(finishRange,0),0), x)) do
+        IO.inspect "the winner"
+        game = Map.put(game,:winner,id)
+      else
+        game
+      end
     end
 end
