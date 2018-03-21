@@ -17,4 +17,10 @@ defmodule Turbo.GameBackup do
       Map.get(state, name)
     end
   end
+
+  def list() do
+    Agent.get __MODULE__, fn state ->
+      Map.keys(state)
+    end
+  end
 end

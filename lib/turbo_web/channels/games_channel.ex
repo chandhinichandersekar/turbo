@@ -5,6 +5,9 @@ defmodule TurboWeb.GamesChannel do
 
   def join("games:" <> name, payload, socket) do
     if authorized?(payload) do
+      IO.puts("Available Games")
+      IO.inspect(Turbo.GameBackup.list())
+      # listgame = Turbo.GameBackup.list() || %{}
       game = Turbo.GameBackup.load(name) || Game.new()
       socket = socket
       |> assign(:game, game)

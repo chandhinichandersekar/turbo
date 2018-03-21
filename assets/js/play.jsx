@@ -23,7 +23,8 @@ class TurboGame extends React.Component {
       finishPosition: [],
       obstacleimage:new window.Image(),
       image:new window.Image(),
-      finishimage:new window.Image()
+      finishimage:new window.Image(),
+      wait: 1
     };
     this.channel.join()
         .receive("ok", this.gotView.bind(this))
@@ -44,6 +45,7 @@ class TurboGame extends React.Component {
       console.log(msg)
       this.setState({winner: msg.winner})
       console.log("Some call")
+      this.setState({wait: msg.wait})
     });
     console.log(this.state.winner)
   }
@@ -102,6 +104,8 @@ let finishline = this.state.finishPosition.map((finish,i)=>
   />
 );
 
+console.log("wait",this.state.wait);
+
     return (
       <div>
       <Stage width={window.innerWidth} height={window.innerHeight}>
@@ -112,6 +116,7 @@ let finishline = this.state.finishPosition.map((finish,i)=>
           {carlist}
         </Layer>
       </Stage>
+      <p> {this.state.wait? "waiting for player 2" : " "} </p>
       <h1>Winner is : { this.state.winner ? "Player" + " " +this.state.winner : "Still Playing"} </h1>
       </div>
     );

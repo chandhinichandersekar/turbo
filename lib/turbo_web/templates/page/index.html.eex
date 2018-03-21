@@ -4,5 +4,14 @@
     <h6> Enter the name of the Game you want to join</h6>
     <p><input type="text" class="game-input" id="game-input"></p>
     <p><a href="javascript:" class="btn btn-primary" id="game-button" >Join Game</a></p>
+
+    <h2>List of currently running games</h2>
+    <ul>
+      <%= for game <- Turbo.GameBackup.list() do %>
+        <li>
+          <%= game %>
+        </li>
+      <% end %>
+    </ul>
   </div>
 </div>
