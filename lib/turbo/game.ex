@@ -80,8 +80,8 @@ defmodule Turbo.Game do
                   game = checkCarCollision(game,x,y,id)
                   Map.put(game,:playerInfo,playerInfo_map)
           {40} -> [x,y] = playerInfo_map[id]
-                  y = if(y + 30 < 790)do
-                    y = y + 30
+                  y = if(y + 30 < 780)do
+                    y = y + 25
                   else
                     y
                   end
@@ -116,7 +116,7 @@ end
     def getObstacleRange(obs) do
       [x,y] = obs
       xrangevalues = Enum.to_list x-50 .. x+20
-      yrangevalues =  Enum.to_list y-10 .. y+40
+      yrangevalues =  Enum.to_list y-20 .. y+50
       rangeValues = [[xrangevalues],[yrangevalues]]
     end
 
