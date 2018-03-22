@@ -48,3 +48,22 @@ body { font-size: 20pt; }
   color: black;
 
 }
+
+.ReactModalPortal{
+    transition: all 0.3s ease;
+    > div{
+      background-color: rgba(255, 255, 255, 0) !important;
+    }
+    .ReactModal__Overlay{
+      background-color: none !important;
+    }
+    .ReactModal__Content {
+      background-image: url('/images/giphy.gif') !important;
+      background-position: center !important;
+      background-repeat: no-repeat !important;
+      background-size: cover !important;
+      bottom: 300px !important;
+      left: 200px !important;
+      right: 200px !important;
+    }
+}

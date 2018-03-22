@@ -36,6 +36,7 @@ defmodule Turbo.Game do
       else
         if (id == 2) do
         playerInfo_map = Map.put(playerInfo_map,id,[10,630])
+        game = Map.put(game,:wait,0)
         Map.put(game,:playerInfo,playerInfo_map)
       else
         game
@@ -119,6 +120,13 @@ end
       rangeValues = [[xrangevalues],[yrangevalues]]
     end
 
+    def getFinishRange(obs) do
+      [x,y] = obs
+      xrangevalues = Enum.to_list x .. x+20
+      yrangevalues =  Enum.to_list y-10 .. y+40
+      rangeValues = [[xrangevalues],[yrangevalues]]
+    end
+
     def getCarRange(car) do
       [x,y] = car
       xrangevalues =  x-50 .. x+20
@@ -135,7 +143,7 @@ end
     end
 
     def checkFinish(game,x,y,id) do
-      finishRange = getObstacleRange(Enum.at(game.finishPosition,0))
+      finishRange = getFinishRange(Enum.at(game.finishPosition,0))
       if (Enum.member?(Enum.at(Enum.at(finishRange,0),0), x)) do
         game = Map.put(game,:winner,id)
       else
@@ -153,6 +161,11 @@ end
       IO.inspect othercar
       otherCarRange = getCarRange(othercar)
       if(Enum.member?(Enum.at(Enum.at(otherCarRange,0),0), x) && Enum.member?(Enum.at(Enum.at(otherCarRange,1),0), y ) ) do
+        game = if id==1 do
+          Map.put(game,:winner,2)
+        else
+          Map.put(game,:winner,1)
+        end
         game = Map.put(game,:crashed, [x,y])
       else
         game

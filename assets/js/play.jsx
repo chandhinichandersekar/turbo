@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Button } from 'reactstrap';
 import { Stage, Layer, Image } from "react-konva";
+import ReactModal from 'react-modal';
 
 
 export default function game_init(root, channel) {
@@ -27,13 +28,21 @@ class TurboGame extends React.Component {
       wait: 1,
       crashed : [],
       crashimg : new window.Image(),
-      empty : new window.Image()
+      empty : new window.Image(),
+      showModal: false
     };
     this.channel.join()
         .receive("ok", this.gotView.bind(this))
         .receive("error", resp => { console.log("Unable to join", resp) });
-
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
   }
+
+
+  handleCloseModal () {
+    this.setState({ showModal: false });
+  }
+
 
   gotView(view) {
     this.setState(view.game);
@@ -50,7 +59,14 @@ class TurboGame extends React.Component {
       this.setState({crashed: msg.crashed})
 
     });
-    console.log(this.state.winner)
+    console.log(this.state.winner);
+    if(this.state.winner > 0 && this.state.crashed.length==0){
+       this.alertWinner()
+    }
+    if(this.state.crashed.length > 0 )
+      this.alertCrashed()
+
+
   }
 
   sendInfo(keyCode,id) {
@@ -75,6 +91,21 @@ class TurboGame extends React.Component {
   alertwaiting(){
     alert("waiting for player 2");
   }
+
+  handleOpenModal () {
+    this.setState({ showModal: true });
+  }
+
+  alertCrashed() {
+    setTimeout(this.handleOpenModal,1500);
+
+  }
+
+  alertWinner() {
+      this.handleOpenModal();
+  }
+
+
 
   render() {
     let playerInfoAll = Object.values(this.state.playerInfo);
@@ -131,8 +162,8 @@ let crash =
       y={0}
     />
 
-console.log("crashed",this.state.crashed[0]);
-
+// console.log("crashed",this.state.crashed[0]);
+// console.log("winner",this.state.winner);
     return (
       <div>
       <Stage width={window.innerWidth} height={window.innerHeight}>
@@ -144,8 +175,14 @@ console.log("crashed",this.state.crashed[0]);
           {this.state.crashed.length > 0 ? crash : empty}
         </Layer>
       </Stage>
-      <p class="waiting-msg"> {this.state.wait? "Waiting for player 2" : " "} </p>
-      <h1>Winner is : { this.state.winner ? "Player" + " " +this.state.winner : "Still Playing"} </h1>
+      <ReactModal
+                 isOpen={this.state.showModal}
+                 contentLabel="Minimal Modal Example"
+              >
+              <h1>{ "The Winner is Player    " + this.state.winner}</h1>
+              <a href=".." className="button">Play a New Game</a>
+              </ReactModal>
+      <p className="waiting-msg"> {this.state.wait? "Waiting for player 2" : " "} </p>
       </div>
     );
   }
