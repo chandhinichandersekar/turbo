@@ -24,7 +24,10 @@ class TurboGame extends React.Component {
       obstacleimage:new window.Image(),
       image:new window.Image(),
       finishimage:new window.Image(),
-      wait: 1
+      wait: 1,
+      crashed : [],
+      crashimg : new window.Image(),
+      empty : new window.Image()
     };
     this.channel.join()
         .receive("ok", this.gotView.bind(this))
@@ -42,10 +45,10 @@ class TurboGame extends React.Component {
     }
     this.channel.on("playerActionsCompleted", msg => {
       this.setState({playerInfo: msg.playerInfo})
-      console.log(msg)
       this.setState({winner: msg.winner})
-      console.log("Some call")
       this.setState({wait: msg.wait})
+      this.setState({crashed: msg.crashed})
+
     });
     console.log(this.state.winner)
   }
@@ -59,6 +62,8 @@ class TurboGame extends React.Component {
     this.state.image.src = "/images/car.png";
     this.state.obstacleimage.src = "/images/road-blocker.png";
     this.state.finishimage.src = "/images/finishline.png";
+    this.state.crashimg.src = "/images/boom.png";
+    this.state.empty.src = "/images/empty.png";
     document.addEventListener("keydown", this._handleKeyDown.bind(this));
   }
 
@@ -66,6 +71,10 @@ class TurboGame extends React.Component {
       event.preventDefault();
       this.sendInfo(event.keyCode,this.id);
     }
+
+  alertwaiting(){
+    alert("waiting for player 2");
+  }
 
   render() {
     let playerInfoAll = Object.values(this.state.playerInfo);
@@ -97,14 +106,32 @@ let finishline = this.state.finishPosition.map((finish,i)=>
     key={i}
     image={this.state.finishimage}
     width={80}
-    height={180}
+    height={170}
     x={finish[0]}
     y={finish[1]}
     ref={i}
   />
 );
 
-console.log("wait",this.state.wait);
+let crash =
+    <Image
+    image={this.state.crashimg}
+    width={80}
+    height={80}
+    x={this.state.crashed[0]}
+    y={this.state.crashed[1]}
+  />
+
+  let empty =
+      <Image
+      image={this.state.empty}
+      width={0}
+      height={0}
+      x={0}
+      y={0}
+    />
+
+console.log("crashed",this.state.crashed[0]);
 
     return (
       <div>
@@ -114,9 +141,10 @@ console.log("wait",this.state.wait);
           {finishline}
           {obstaclelist}
           {carlist}
+          {this.state.crashed.length > 0 ? crash : empty}
         </Layer>
       </Stage>
-      <p> {this.state.wait? "waiting for player 2" : " "} </p>
+      <p class="waiting-msg"> {this.state.wait? "Waiting for player 2" : " "} </p>
       <h1>Winner is : { this.state.winner ? "Player" + " " +this.state.winner : "Still Playing"} </h1>
       </div>
     );
@@ -135,7 +163,7 @@ console.log("wait",this.state.wait);
 
   componentDidMount() {
     const image = new window.Image();
-    image.src = "https://cdn.tutsplus.com/active/uploads/legacy/tuts/120_CS5decoTool/tutorial/images/-08.jpg";
+    image.src = "/images/background.jpeg";
     image.onload = () => {
       this.setState({
         image: image
@@ -144,7 +172,7 @@ console.log("wait",this.state.wait);
   }
 
   render() {
-    return <Image image={this.state.image} width={1400}
+    return <Image image={this.state.image} width={window.innerWidth}
         height={800} />;
   }
 }

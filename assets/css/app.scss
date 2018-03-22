@@ -2,7 +2,49 @@
 @import "bootstrap";
 
 body { font-size: 20pt; }
+//
+// @font-face {
+//     font-family: racefont;
+//     src: url(http://www.1001fonts.com/halo-font.html?text=Join%20the%20Game&size=22);
+// }
 
 .container{
   max-width: 100%;
+  max-height: 100%;
+  padding: 0;
+  color: #ddd;
+  font-family: racefont;
+}
+
+
+.firstpage-bg{
+    text-align: center;
+    padding: 80px ;
+    background-image: url('/images/carbg.png');
+    /* Full height */
+    height: 100vh;
+    width: 100%;
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    &::before {
+    content:"";
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .6);
+  }
+
+}
+
+.waiting-msg {
+  position: absolute;
+  top: 50px;
+  color: black;
+
 }
