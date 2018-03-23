@@ -36,6 +36,7 @@ defmodule Turbo.Game do
       else
         if (id == 2) do
         playerInfo_map = Map.put(playerInfo_map,id,[10,630])
+
         Map.put(game,:playerInfo,playerInfo_map)
       else
         game

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Button } from 'reactstrap';
 import { Stage, Layer, Image } from "react-konva";
-
+import Popup from 'react-popup';
 
 export default function game_init(root, channel) {
   ReactDOM.render(<TurboGame channel = {channel} />, root);
@@ -144,7 +144,7 @@ console.log("crashed",this.state.crashed[0]);
           {this.state.crashed.length > 0 ? crash : empty}
         </Layer>
       </Stage>
-      <p class="waiting-msg"> {this.state.wait? "Waiting for player 2" : " "} </p>
+      <p className="waiting-msg"> {this.state.wait? "Waiting for player 2" : " "} </p>
       <h1>Winner is : { this.state.winner ? "Player" + " " +this.state.winner : "Still Playing"} </h1>
       </div>
     );
