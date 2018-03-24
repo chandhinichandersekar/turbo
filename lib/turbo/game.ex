@@ -57,9 +57,12 @@ defmodule Turbo.Game do
       ystartValue = 590
       xendValue = 1340
       yendValue = 780
+      firstIndex = 1
+      secondIndex = 2
+      zeroIndex = 0
       IO.inspect game.crashed
-      if (game.playerCount >= 2 && length(game.crashed) == 0) do
-        game = Map.put(game,:wait,0)
+      if (game.playerCount >= secondIndex && length(game.crashed) == zeroIndex) do
+        game = Map.put(game,:wait,zeroIndex)
         game = case{keyCode} do
           {37} -> [x,y] = playerInfo_map[id]
                   x = if(x - changeValue > xstartValue)do
@@ -101,15 +104,15 @@ defmodule Turbo.Game do
           _ -> game
       end
     else
-      if(length(game.crashed) == 0) do
-      game = Map.put(game,:wait,1)
+      if(length(game.crashed) == zeroIndex) do
+      game = Map.put(game,:wait,firstIndex)
     end
 end
       [x,y] = playerInfo_map[id]
       obstaclelist = Enum.map(game.obstaclePosition,&getObstacleRange/1)
       hitObstacle = Enum.map(obstaclelist,
       fn hit ->
-        if(Enum.member?(Enum.at(Enum.at(hit,0),0), x) && Enum.member?(Enum.at(Enum.at(hit,1),0), y )) do
+        if(Enum.member?(Enum.at(Enum.at(hit,zeroIndex),zeroIndex), x) && Enum.member?(Enum.at(Enum.at(hit,firstIndex),zeroIndex), y )) do
           true
         else
           false
@@ -155,8 +158,9 @@ end
     end
 
     def checkFinish(game,x,y,id) do
-      finishRange = getFinishRange(Enum.at(game.finishPosition,0))
-      if (Enum.member?(Enum.at(Enum.at(finishRange,0),0), x)) do
+      zeroIndex = 0
+      finishRange = getFinishRange(Enum.at(game.finishPosition,zeroIndex))
+      if (Enum.member?(Enum.at(Enum.at(finishRange,zeroIndex),zeroIndex), x)) do
         game = Map.put(game,:winner,id)
       else
         game
@@ -164,18 +168,21 @@ end
     end
 
     def checkCarCollision(game,x,y,id) do
+      zeroIndex = 0
+      firstIndex = 1
+      secondIndex = 2
       playerInfo = game[:playerInfo]
-      if id==1 do
+      if id==firstIndex do
         othercar = playerInfo[2]
       else
         othercar = playerInfo[1]
       end
       otherCarRange = getCarRange(othercar)
-      if(Enum.member?(Enum.at(Enum.at(otherCarRange,0),0), x) && Enum.member?(Enum.at(Enum.at(otherCarRange,1),0), y ) ) do
-        game = if id==1 do
-          Map.put(game,:winner,2)
+      if(Enum.member?(Enum.at(Enum.at(otherCarRange,zeroIndex),zeroIndex), x) && Enum.member?(Enum.at(Enum.at(otherCarRange,firstIndex),zeroIndex), y ) ) do
+        game = if id==firstIndex do
+          Map.put(game,:winner,secondIndex)
         else
-          Map.put(game,:winner,1)
+          Map.put(game,:winner,firstIndex)
         end
         game = Map.put(game,:crashed, [x,y])
       else
