@@ -50,7 +50,7 @@ body { font-size: 20pt; }
     text-align: left;
     margin-top: 30px;
   }
-  li{
+  div{
     text-align: left;
   }
 }
@@ -105,7 +105,7 @@ body { font-size: 20pt; }
       font-size: 45px;
       font-weight: bold;
     }
-    
+
     .ReactModal__Overlay{
       background-color: none !important;
     }
@@ -116,11 +116,23 @@ body { font-size: 20pt; }
       background-position: center !important;
       background-repeat: no-repeat !important;
       background-size: cover !important;
-      bottom: 300px !important;
+      bottom: 200px !important;
       left: 200px !important;
       right: 200px !important;
+      top: 0px !important;
     }
+
 }
+
+.startModal {
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/start.gif') !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
 
 .game-page {
   color: black;
