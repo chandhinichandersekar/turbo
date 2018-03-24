@@ -30,12 +30,15 @@ defmodule Turbo.Game do
   def play(game,ll,id) do
     game = Map.replace!(game, :playerCount ,ll)
     playerInfo_map = game[:playerInfo]
+    playerOneStartPosition = [10,730]
+    playerTwoStartPosition = [10,630]
+    #IO.inspect game
     game = if(id == 1) do
-        playerInfo_map = Map.put(playerInfo_map,id,[10,730])
+        playerInfo_map = Map.put(playerInfo_map,id,playerOneStartPosition)
         Map.put(game,:playerInfo,playerInfo_map)
       else
         if (id == 2) do
-        playerInfo_map = Map.put(playerInfo_map,id,[10,630])
+        playerInfo_map = Map.put(playerInfo_map,id,playerTwoStartPosition)
         game = Map.put(game,:wait,0)
         Map.put(game,:playerInfo,playerInfo_map)
       else
@@ -48,12 +51,19 @@ defmodule Turbo.Game do
 
     def setActions(game,keyCode,id) do
       playerInfo_map = game[:playerInfo]
-      if (game.playerCount >= 2) do
+      changeValue = 30
+      ychangeValue = 25
+      xstartValue = 10
+      ystartValue = 590
+      xendValue = 1340
+      yendValue = 780
+      IO.inspect game.crashed
+      if (game.playerCount >= 2 && length(game.crashed) == 0) do
         game = Map.put(game,:wait,0)
         game = case{keyCode} do
           {37} -> [x,y] = playerInfo_map[id]
-                  x = if(x - 30 > 10)do
-                    x = x - 30
+                  x = if(x - changeValue > xstartValue)do
+                    x = x - changeValue
                   else
                     x
                   end
@@ -61,8 +71,8 @@ defmodule Turbo.Game do
                   game = checkCarCollision(game,x,y,id)
                   Map.put(game,:playerInfo,playerInfo_map)
           {38} -> [x,y] = playerInfo_map[id]
-                  y = if(y - 30 > 590)do
-                    y = y - 30
+                  y = if(y - changeValue > ystartValue)do
+                    y = y - changeValue
                   else
                     y
                   end
@@ -70,8 +80,8 @@ defmodule Turbo.Game do
                   game = checkCarCollision(game,x,y,id)
                   Map.put(game,:playerInfo,playerInfo_map)
           {39} ->  [x,y] = playerInfo_map[id]
-                    x = if(x + 30 < 1340)do
-                      x = x + 30
+                    x = if(x + changeValue < xendValue)do
+                      x = x + changeValue
                     else
                       x
                     end
@@ -80,8 +90,8 @@ defmodule Turbo.Game do
                   game = checkCarCollision(game,x,y,id)
                   Map.put(game,:playerInfo,playerInfo_map)
           {40} -> [x,y] = playerInfo_map[id]
-                  y = if(y + 30 < 780)do
-                    y = y + 25
+                  y = if(y + changeValue < yendValue)do
+                    y = y + ychangeValue
                   else
                     y
                   end
@@ -91,7 +101,9 @@ defmodule Turbo.Game do
           _ -> game
       end
     else
+      if(length(game.crashed) == 0) do
       game = Map.put(game,:wait,1)
+    end
 end
       [x,y] = playerInfo_map[id]
       obstaclelist = Enum.map(game.obstaclePosition,&getObstacleRange/1)
@@ -158,7 +170,6 @@ end
       else
         othercar = playerInfo[1]
       end
-      IO.inspect othercar
       otherCarRange = getCarRange(othercar)
       if(Enum.member?(Enum.at(Enum.at(otherCarRange,0),0), x) && Enum.member?(Enum.at(Enum.at(otherCarRange,1),0), y ) ) do
         game = if id==1 do
