@@ -52,19 +52,19 @@ class TurboGame extends React.Component {
       .receive("ok", this.gotView.bind(this));
       this.count = this.count+1;
     }
+
     this.channel.on("playerActionsCompleted", msg => {
       this.setState({playerInfo: msg.playerInfo})
       this.setState({winner: msg.winner})
       this.setState({wait: msg.wait})
       this.setState({crashed: msg.crashed})
-
+      // console.log(crashed);
+          if(this.state.winner > 0 && this.state.crashed.length==0){
+             this.alertWinner()
+          }
+          if(this.state.crashed.length > 0 )
+            this.alertCrashed()
     });
-    console.log(this.state.winner);
-    if(this.state.winner > 0 && this.state.crashed.length==0){
-       this.alertWinner()
-    }
-    if(this.state.crashed.length > 0 )
-      this.alertCrashed()
 
 
   }
@@ -175,14 +175,16 @@ let crash =
           {this.state.crashed.length > 0 ? crash : empty}
         </Layer>
       </Stage>
-      <ReactModal
-                 isOpen={this.state.showModal}
-                 contentLabel="Minimal Modal Example"
-              >
-              <h1>{ "The Winner is Player    " + this.state.winner}</h1>
-              <a href=".." className="button">Play a New Game</a>
-              </ReactModal>
-      <p className="waiting-msg"> {this.state.wait? "Waiting for player 2" : " "} </p>
+      <ReactModal isOpen={this.state.showModal} ariaHideApp={false} contentLabel="Minimal Modal Example">
+              <h1>{ "The Winner is Player    " + this.state.winner+" !!!" } </h1>
+              <a href=".." className="btn btn-primary">Play a New Game</a>
+      </ReactModal>
+      <div className="waiting-msg"> {this.state.wait?
+           <div className="alert alert-danger alert-dismissible">
+            <a href="#" className="close" data-dismiss="alert" aria-label="close">&times;</a>
+            Waiting for Player 2 to join
+          </div> : " "}
+          </div>
       </div>
     );
   }

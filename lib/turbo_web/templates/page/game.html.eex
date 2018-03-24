@@ -1,6 +1,7 @@
 <div class="row">
-  <div class="col">
-    <h1>Turbo: <%= @game %></h1>
+  <div class="col game-page">
+    <h1>Welcome to Turbo !!</h1>
+    <h2> Your game name is : <%= @game %></h2>
     <audio autoplay>
         <source src="<%= static_path(@conn, "/../images/cartheme.mp3") %>" type="audio/mpeg">
     </audio>

@@ -13,10 +13,56 @@ body { font-size: 20pt; }
   max-height: 100%;
   padding: 0;
   color: #ddd;
-  font-family: racefont;
+  font-family: 'Roboto', sans-serif;
 }
 
+.main-page {
+  padding: 50px;
+  font-weight: 300;
+  h2 {
+    margin-bottom: 25px;
+    font-size: 40px;
+    font-weight: 300;
+  }
+  h5{
+    margin-bottom: 15px;
+  }
+  #game-button {
+    background: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-color: #ddd;
+    border-radius: 25px;
+    font-weight:  300;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    &:hover {
+      background: #8B0000;
+      color: #efefef;
 
+    }
+  }
+  input{
+      background-color: rgba(239, 239, 239,1);
+  }
+  h4{
+    font-weight: 300;
+    text-align: left;
+    margin-top: 30px;
+  }
+  li{
+    text-align: left;
+  }
+}
+.rule-book {
+  font-size: 18px;
+  font-weight: 300;
+  text-align: left;
+  padding: 30px ;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
 .firstpage-bg{
     text-align: center;
     padding: 80px ;
@@ -51,13 +97,21 @@ body { font-size: 20pt; }
 
 .ReactModalPortal{
     transition: all 0.3s ease;
+
     > div{
       background-color: rgba(255, 255, 255, 0) !important;
     }
+    h1 {
+      font-size: 45px;
+      font-weight: bold;
+    }
+    
     .ReactModal__Overlay{
       background-color: none !important;
     }
     .ReactModal__Content {
+      border-radius: 25px !important;
+      box-shadow: 1px 1px 5px #ccc8c8;
       background-image: url('/images/giphy.gif') !important;
       background-position: center !important;
       background-repeat: no-repeat !important;
@@ -66,4 +120,23 @@ body { font-size: 20pt; }
       left: 200px !important;
       right: 200px !important;
     }
+}
+
+.game-page {
+  color: black;
+  h1{
+    margin: 20px auto;
+    text-align: center;
+    font-size: 45px;
+  }
+  h2{
+      text-align: center;
+    font-weight: 300;
+  }
+  .waiting-msg {
+    text-align: center;
+    width: 50%;
+    left: 25%;
+    top: 15%;
+  }
 }

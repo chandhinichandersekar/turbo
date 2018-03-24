@@ -56,7 +56,7 @@ defmodule Turbo.Game do
       xstartValue = 10
       ystartValue = 590
       xendValue = 1340
-      yendValue = 780
+      yendValue = 760
       firstIndex = 1
       secondIndex = 2
       zeroIndex = 0
@@ -130,29 +130,36 @@ end
 
     def getObstacleRange(obs) do
       [x,y] = obs
-      xrangevalues = Enum.to_list x-50 .. x+20
-      yrangevalues =  Enum.to_list y-20 .. y+50
+      buffer1 = 50
+      buffer2 =20
+      xrangevalues = Enum.to_list x-buffer1 .. x+buffer2
+      yrangevalues =  Enum.to_list y-buffer2 .. y+buffer1
       rangeValues = [[xrangevalues],[yrangevalues]]
     end
 
     def getFinishRange(obs) do
       [x,y] = obs
-      xrangevalues = Enum.to_list x .. x+20
-      yrangevalues =  Enum.to_list y-10 .. y+40
+      buffer1 = 40
+      buffer2 = 20
+      buffer3 = 10
+      xrangevalues = Enum.to_list x .. x+buffer2
+      yrangevalues =  Enum.to_list y-buffer3 .. y+buffer1
       rangeValues = [[xrangevalues],[yrangevalues]]
     end
 
     def getCarRange(car) do
       [x,y] = car
-      xrangevalues =  x-50 .. x+20
-      yrangevalues =   y-20 .. y+20
+      buffer1 = 50
+      buffer2 =20
+      xrangevalues =  x-buffer1 .. x+buffer2
+      yrangevalues =   y-buffer2 .. y+buffer2
       rangeValues = [[xrangevalues],[yrangevalues]]
     end
 
 
     def getObstacles() do
-      obs = [[[250,710],[500,620],[750,710],[1100,620]],[[250,620],[500,710],[850,620],
-      [950,710]],[[250,710],[500,620],[750,710],[1100,620]],[[250,620],[500,710],[850,620],[950,710]]]
+      obs = [[[250,700],[500,620],[750,700],[1100,620]],[[250,620],[500,700],[850,620],
+      [950,700]],[[250,700],[500,620],[750,700],[1100,620]],[[250,620],[500,700],[850,620],[950,700]]]
       |> Enum.random()
       obs
     end
@@ -178,7 +185,8 @@ end
         othercar = playerInfo[1]
       end
       otherCarRange = getCarRange(othercar)
-      if(Enum.member?(Enum.at(Enum.at(otherCarRange,zeroIndex),zeroIndex), x) && Enum.member?(Enum.at(Enum.at(otherCarRange,firstIndex),zeroIndex), y ) ) do
+      if(Enum.member?(Enum.at(Enum.at(otherCarRange,zeroIndex),zeroIndex), x)
+       && Enum.member?(Enum.at(Enum.at(otherCarRange,firstIndex),zeroIndex), y ) ) do
         game = if id==firstIndex do
           Map.put(game,:winner,secondIndex)
         else

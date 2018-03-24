@@ -9,10 +9,13 @@
 
     <title>Hello Turbo!</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,500,700" rel="stylesheet">
     <script>
      window.userToken = "INSECURE";
    </script>
    <script src = "https://cdn.rawgit.com/konvajs/konva/1.2.2/konva.min.js"> </script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   </head>
 
   <body>
