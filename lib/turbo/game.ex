@@ -9,9 +9,10 @@ defmodule Turbo.Game do
       obstaclePosition: getObstacles(),
       winner: 0,
       playerCount: 0,
-      finishPosition: [[1280,630]],
+      finishPosition: [[1480,630]],
       wait: 0,
-      crashed: []
+      crashed: [],
+      finished: false
     }
   end
 
@@ -23,7 +24,8 @@ defmodule Turbo.Game do
       winner: game.winner,
       playerCount: game.playerCount,
       wait: game.wait,
-      crashed: game.crashed
+      crashed: game.crashed,
+      finished: game.finished,
     }
   end
 
@@ -55,17 +57,17 @@ defmodule Turbo.Game do
       ychangeValue = 25
       xstartValue = 10
       ystartValue = 590
-      xendValue = 1340
+      xendValue = 1510
       yendValue = 760
       firstIndex = 1
       secondIndex = 2
       zeroIndex = 0
       IO.inspect game.crashed
-      if (game.playerCount >= secondIndex && length(game.crashed) == zeroIndex) do
+      if (game.playerCount >= secondIndex && length(game.crashed) == zeroIndex ) do
         game = Map.put(game,:wait,zeroIndex)
         game = case{keyCode} do
           {37} -> [x,y] = playerInfo_map[id]
-                  x = if(x - changeValue > xstartValue)do
+                  x = if(x - changeValue > xstartValue )do
                     x = x - changeValue
                   else
                     x
@@ -83,7 +85,7 @@ defmodule Turbo.Game do
                   game = checkCarCollision(game,x,y,id)
                   Map.put(game,:playerInfo,playerInfo_map)
           {39} ->  [x,y] = playerInfo_map[id]
-                    x = if(x + changeValue < xendValue)do
+                    x = if(x + changeValue < xendValue )do
                       x = x + changeValue
                     else
                       x
@@ -93,7 +95,7 @@ defmodule Turbo.Game do
                   game = checkCarCollision(game,x,y,id)
                   Map.put(game,:playerInfo,playerInfo_map)
           {40} -> [x,y] = playerInfo_map[id]
-                  y = if(y + changeValue < yendValue)do
+                  y = if(y + changeValue < yendValue )do
                     y = y + ychangeValue
                   else
                     y
@@ -158,8 +160,8 @@ end
 
 
     def getObstacles() do
-      obs = [[[250,700],[500,620],[750,700],[1100,620]],[[250,620],[500,700],[850,620],
-      [950,700]],[[250,700],[500,620],[750,700],[1100,620]],[[250,620],[500,700],[850,620],[950,700]]]
+      obs = [[[1300,700],[500,620],[750,700],[1100,620]],[[1300,620],[500,700],[850,620],
+      [950,700]],[[1300,700],[500,620],[750,700],[1100,620]],[[1300,620],[500,700],[850,620],[950,700]]]
       |> Enum.random()
       obs
     end
@@ -169,6 +171,7 @@ end
       finishRange = getFinishRange(Enum.at(game.finishPosition,zeroIndex))
       if (Enum.member?(Enum.at(Enum.at(finishRange,zeroIndex),zeroIndex), x)) do
         game = Map.put(game,:winner,id)
+        game = Map.put(game, :finished, true)
       else
         game
       end
@@ -193,6 +196,7 @@ end
           Map.put(game,:winner,firstIndex)
         end
         game = Map.put(game,:crashed, [x,y])
+        game = Map.put(game, :finished, true)
       else
         game
       end

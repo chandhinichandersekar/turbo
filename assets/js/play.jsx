@@ -29,19 +29,43 @@ class TurboGame extends React.Component {
       crashed : [],
       crashimg : new window.Image(),
       empty : new window.Image(),
-      showModal: false
+      showModal: false,
+      showStart: false,
+      started: false,
+      finished: false
     };
     this.channel.join()
         .receive("ok", this.gotView.bind(this))
         .receive("error", resp => { console.log("Unable to join", resp) });
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleOpenStart = this.handleOpenStart.bind(this);
+    this.handleCloseStart = this.handleCloseStart.bind(this);
   }
 
 
   handleCloseModal () {
     this.setState({ showModal: false });
   }
+
+  handleOpenStart () {
+    this.setState({ showStart: true });
+  }
+
+  handleCloseStart () {
+    this.setState({ showStart: false });
+  }
+
+    alertWinner() {
+        this.handleOpenModal();
+    }
+
+    alertStart() {
+        this.handleOpenStart();
+    }
+    removealertStart() {
+        this.handleCloseStart();
+    }
 
 
   gotView(view) {
@@ -57,13 +81,19 @@ class TurboGame extends React.Component {
       this.setState({playerInfo: msg.playerInfo})
       this.setState({winner: msg.winner})
       this.setState({wait: msg.wait})
+      this.setState({playerCount: msg.playerCount})
       this.setState({crashed: msg.crashed})
-      // console.log(crashed);
+      this.setState({finished: msg.finished})
           if(this.state.winner > 0 && this.state.crashed.length==0){
              this.alertWinner()
           }
           if(this.state.crashed.length > 0 )
             this.alertCrashed()
+
+          if(this.state.playerCount == 2 && this.state.started == false){
+              this.setState({ showStart: true });
+              setTimeout(() => this.setState({showStart: false,started: true}), 2500);
+          }
     });
 
 
@@ -85,7 +115,9 @@ class TurboGame extends React.Component {
 
   _handleKeyDown (event){
       event.preventDefault();
-      this.sendInfo(event.keyCode,this.id);
+      if(this.state.started == true){
+          this.sendInfo(event.keyCode,this.id);
+      }
     }
 
   alertwaiting(){
@@ -100,11 +132,6 @@ class TurboGame extends React.Component {
     setTimeout(this.handleOpenModal,1500);
 
   }
-
-  alertWinner() {
-      this.handleOpenModal();
-  }
-
 
 
   render() {
@@ -179,8 +206,19 @@ let crash =
               <h1>{ "The Winner is Player    " + this.state.winner+" !!!" } </h1>
               <a href=".." className="btn btn-primary">Play a New Game</a>
       </ReactModal>
+      <ReactModal isOpen={this.state.showStart} ariaHideApp={false} contentLabel="Minimal Modal Start">
+        <div className="startModal">
+            <h1> start game </h1>
+        </div>
+      </ReactModal>
+      <div className="waiting-msg"> {this.id > 2 ?
+        <div class="alert alert-success alert-dismissible">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          You are only a Spectator
+          </div> : " "}
+      </div>
       <div className="waiting-msg"> {this.state.wait?
-           <div className="alert alert-danger alert-dismissible">
+           <div className="alert alert-info alert-dismissible">
             <a href="#" className="close" data-dismiss="alert" aria-label="close">&times;</a>
             Waiting for Player 2 to join
           </div> : " "}
@@ -212,6 +250,6 @@ let crash =
 
   render() {
     return <Image image={this.state.image} width={window.innerWidth}
-        height={800} />;
+        height={window.innerHeight - 170} />;
   }
 }

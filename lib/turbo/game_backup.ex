@@ -23,4 +23,12 @@ defmodule Turbo.GameBackup do
       Map.keys(state)
     end
   end
+  def showlist() do
+    Agent.get __MODULE__, fn state ->
+      Enum.map(state, fn {key, val} -> if(Map.get(val,:finished) == false) do
+         key
+         end
+       end)
+    end
+  end
 end

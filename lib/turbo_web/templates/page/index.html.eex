@@ -7,19 +7,21 @@
     <p><input type="text" class="game-input" id="game-input"></p>
     <p><a href="javascript:" class="btn btn-primary" id="game-button" >Join Game</a></p>
     <h4>List of currently running games</h4>
-      <%= for game <- Turbo.GameBackup.list() do %>
-        <li>
+      <%= for game <- Turbo.GameBackup.showlist() do %>
+        <div>
           <%= game %>
-        </li>
+        </div>
       <% end %>
   </div>
   <div class="col-md-4 offset-md-1 rule-book">
     <i>Rules</i>
     <ul>
     <li> This is a two player car racing game.</li>
-    <li> You can either join a new game by entering the name of the game from the list on already running games from the list provided or
+    <li> You can either join a new game by entering the name of the game from
+      the list of already running games or
       you can enter a new game and be player 1</li>
-    <li> If you join a game where there are two players already you become an observer and you can just watch the game.
+    <li> If you join a game where there are two players already you become an
+       observer and you can just watch the game.
     </li>
     <li>
        Do not refresh the page while racing or you lose the race.
@@ -28,12 +30,9 @@
     <li>
        Player 1 will be on the bottom lane and Player 2 will be on the top lane.
     </li>
-    <li> The Race starts immediately after the second player joins.So be alert.</li>
     <li>  Each player can move left, right ,up and down using the arrow keys on his key pad.</li>
-    <li>  If you bang into any of the road blocks your car will be moved back a few steps and </li>
-    you may end up having a delay.
-    <li> <b>DO NOT</b> bang into the opponent car.If you do you opponent wins the game.</li>
-    <li> The first car which crosses the finish line wins the game</li>
+    <li> <b>DO NOT</b> crash into the opponent car.If you do, your opponent wins the game.</li>
+    <li> The first car crossing the finish line wins the race.</li>
   </ul>
   </div>
 </div>
