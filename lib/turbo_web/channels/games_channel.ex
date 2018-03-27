@@ -6,7 +6,6 @@ defmodule TurboWeb.GamesChannel do
   def join("games:" <> name, payload, socket) do
     if authorized?(payload) do
       game = Turbo.GameBackup.load(name) || Game.new()
-      Turbo.GameBackup.showlist()
       socket = socket
       |> assign(:game, game)
       |> assign(:name, name)
@@ -43,3 +42,11 @@ defmodule TurboWeb.GamesChannel do
     true
   end
 end
+
+# References:
+# Class Notes
+# http://www.ccs.neu.edu/home/ntuck/courses/2018/01/cs4550/notes/
+# https://hexdocs.pm/elixir/Enum.html
+# https://elixir-lang.org/
+# https://hexdocs.pm/phoenix/Phoenix.Channel.html
+# https://motions.work/motion/911
