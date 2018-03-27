@@ -41,3 +41,6 @@ crontab - <<CRONTAB
 CRONTAB
 
 #. start.sh
+
+# References
+# http://www.ccs.neu.edu/home/ntuck/courses/2018/01/cs4550/notes/
