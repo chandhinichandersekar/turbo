@@ -10,7 +10,7 @@ defmodule Turbo.Game do
       winner: 0,
       playerCount: 0,
       finishPosition: [[1480,630]],
-      wait: 0,
+      wait: 1,
       crashed: [],
       finished: false
     }
@@ -106,15 +106,19 @@ defmodule Turbo.Game do
           _ -> game
       end
     else
+      if(game.playerCount < 2) do
+        game = Map.put(game,:wait,firstIndex)
+      end
       if(length(game.crashed) == zeroIndex) do
       game = Map.put(game,:wait,firstIndex)
     end
-end
+  end
       [x,y] = playerInfo_map[id]
       obstaclelist = Enum.map(game.obstaclePosition,&getObstacleRange/1)
       hitObstacle = Enum.map(obstaclelist,
       fn hit ->
-        if(Enum.member?(Enum.at(Enum.at(hit,zeroIndex),zeroIndex), x) && Enum.member?(Enum.at(Enum.at(hit,firstIndex),zeroIndex), y )) do
+        if(Enum.member?(Enum.at(Enum.at(hit,zeroIndex),zeroIndex), x) &&
+         Enum.member?(Enum.at(Enum.at(hit,firstIndex),zeroIndex), y )) do
           true
         else
           false
@@ -202,3 +206,10 @@ end
       end
     end
 end
+
+# References:
+# Class Notes
+# http://www.ccs.neu.edu/home/ntuck/courses/2018/01/cs4550/notes/
+# https://hexdocs.pm/elixir/Enum.html
+# https://elixir-lang.org/
+# https://www.kirupa.com/canvas/moving_shapes_canvas_keyboard.htm

@@ -18,11 +18,6 @@ defmodule Turbo.GameBackup do
     end
   end
 
-  def list() do
-    Agent.get __MODULE__, fn state ->
-      Map.keys(state)
-    end
-  end
   def showlist() do
     Agent.get __MODULE__, fn state ->
       Enum.map(state, fn {key, val} -> if(Map.get(val,:finished) == false) do
@@ -32,3 +27,10 @@ defmodule Turbo.GameBackup do
     end
   end
 end
+
+
+# References:
+# Class Notes
+# http://www.ccs.neu.edu/home/ntuck/courses/2018/01/cs4550/notes/10-proc-state/
+# https://hexdocs.pm/elixir/Enum.html
+# https://elixir-lang.org/
